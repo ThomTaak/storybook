@@ -1,25 +1,79 @@
 {
-  "name": "lwc-wca",
-  "version": "1.6.0",
-  "description": "Sample LWC project to integrate with Web Component Analyzer",
-  "private": true,
-  "license": "BSD-3-Clause",
-  "scripts": {
-    "build": "lerna run build --stream",
-    "start": "lerna run start --scope lwc-app --stream",
-    "clean": "lerna run clean --stream",
-    "test": "lerna run test --stream",
-    "build-storybook": "echo not from here!",
-    "build-static": "lerna run storybook:build-static --stream",
-    "deploy-static": "gh-pages -d static-site -u priandsf@salesforce.com -m \"Storybook static site\""
-  },
-  "devDependencies": {
-    "gh-pages": "3.1.0"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/lwc-library",
-      "packages/lwc-app"
-    ]
-  }
+    "name": "lwc-library",
+    "description": "LWC Components Library",
+    "version": "0.0.1",
+    "author": "Philippe Riand",
+    "dependencies": {
+        "compression": "^1.7.4",
+        "express": "~4.16.3",
+        "useragent": "~2.3.0"
+    },
+    "devDependencies": {
+        "@lwc/compiler": "^1.7.7",
+        "@lwc/engine": "^1.7.7",
+        "@lwc/rollup-plugin": "^1.7.7",
+        "@lwc/synthetic-shadow": "^1.7.7",
+        "@lwc/wire-service": "^1.7.7",
+        "@lwc/jest-preset": "^7.0.0",
+        "rollup": "^2.21.0",
+        "@rollup/plugin-commonjs": "^13.0.1",
+        "@rollup/plugin-node-resolve": "^8.4.0",
+        "@rollup/plugin-replace": "2.3.3",
+        "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-node-globals": "^1.4.0",
+        "rollup-plugin-compat": "0.22.1",
+        "rollup-plugin-copy": "^3.3.0",
+        "rollup-plugin-terser": "^6.1.0",
+        "concurrently": "~4.0.1",
+        "cross-env": "^6.0.3",
+        "lint-staged": "^9.4",
+
+        "@storybook/addon-a11y": "^6.0.21",
+        "@storybook/addon-actions": "^6.0.21",
+        "@storybook/addon-backgrounds": "^6.0.21",
+        "@storybook/addon-controls": "^6.0.21",
+        "@storybook/addon-docs": "^6.0.21",
+        "@storybook/addon-events": "^6.0.21",
+        "@storybook/addon-jest": "^6.0.21",
+        "@storybook/addon-links": "^6.0.21",
+        "@storybook/addon-storyshots": "^6.0.21",
+        "@storybook/addon-storysource": "^6.0.21",
+        "@storybook/addon-viewport": "^6.0.21",
+        "@storybook/addons": "^6.0.21",
+        "@storybook/client-api": "^6.0.21",
+        "@storybook/core": "^6.0.21",
+        "@storybook/core-events": "^6.0.21",
+        "@storybook/source-loader": "^6.0.21",
+        "@storybook/web-components": "^6.0.21",
+        
+        "@storybook/cli": "^6.0.21",
+        "lit-html": "^1.2.1",
+        "npm-run-all": "4.1.5",
+        "@open-wc/lit-helpers": "0.3.10",
+        "web-component-analyzer": "1.2.0-next.0"
+    },
+    "engines": {
+        "node": ">=10.13.0",
+        "npm": ">=6.4.1",
+        "yarn": ">=1.9.4"
+    },
+    "scripts": {
+        "build": "cross-env rollup -c ./scripts/rollup.config.js",
+
+        "storybook": "yarn storybook:meta && run-p storybook:buildlwcw storybook:start",
+        "storybook:build": "yarn storybook:meta && yarn storybook:buildlwc",
+        "storybook:meta": "web-component-analyzer src --outFiles .storybook/build/custom-elements.json",
+        "storybook:meta-doc": "web-component-analyzer src --format markdown --outFiles .storybook/build/documentation.md",
+        "storybook:meta-vs": "web-component-analyzer src --format vscode --outFiles .storybook/build/documentation.md",
+        "storybook:buildlwc": "rollup -c ./.storybook/rollup.config.js",
+        "storybook:buildlwcw": "rollup -w -c ./.storybook/rollup.config.js",
+        "storybook:start": "start-storybook -s ./dist -p 6006",
+        "storybook:build-static": "yarn storybook:build && yarn build-storybook",
+        "build-storybook": "build-storybook -c .storybook -o ../../static-site/lwc-library && sb extract ../../static-site/lwc-library  ../../static-site/lwc-library/stories.json"
+    },
+
+    "storybook": {
+        "title": "LWC Library Example",    
+        "url": "https://lwc-essentials.github.io/storybook/lwc-library"
+    }
 }
